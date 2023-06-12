@@ -1,19 +1,21 @@
-import { PropsWithChildren, useState } from "react";
+import { PropsWithChildren } from "react";
 import {
   BrowserRouter as Router,
   Routes,
   Route,
   Navigate,
 } from "react-router-dom";
+import Shop from "./pages/shop/shop";
 
 function App() {
+  
   return (
     <Router>
       <Routes>
         <Route path="/sign-in" element={"SignIn"} />
         <Route path="/sign-up" element={"SignUp"} />
 
-        <Route path="/" element={"Shop"} />
+        <Route path="/" element={<Shop />} />
 
         <Route
           path="/user"

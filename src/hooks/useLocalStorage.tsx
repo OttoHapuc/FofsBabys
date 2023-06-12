@@ -1,10 +1,9 @@
 import { useState } from 'react';
 
-type SetValueFunction<T> = (value: T | ((prevValue: T) => T)) => void;
+type SetValue<T> = (value: T | ((prevValue: T) => T)) => void;
+type UseLocalStorageReturnType<T> = [T | undefined, SetValue<T>];
 
-type UseLocalStorageResult<T> = [T, SetValueFunction<T>];
-
-export default function useLocalStorage<T>(key: string, initialValue: T): UseLocalStorageResult<T> {
+export default function useLocalStorage<T>(key: string, initialValue: any): UseLocalStorageReturnType<T> {
   const [storedValue, setStoredValue] = useState<T>(() => {
     try {
       const item = window.localStorage.getItem(key);
@@ -15,9 +14,9 @@ export default function useLocalStorage<T>(key: string, initialValue: T): UseLoc
     }
   });
 
-  const setValue: SetValueFunction<T> = (value) => {
+  const setValue: SetValue<T> = (value) => {
     try {
-      const valueToStore = typeof value === 'function' ? (value as Function)(storedValue) : value;
+      const valueToStore = value instanceof Function ? value(storedValue) : value;
       setStoredValue(valueToStore);
       window.localStorage.setItem(key, JSON.stringify(valueToStore));
     } catch (error) {
